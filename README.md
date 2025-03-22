@@ -65,3 +65,71 @@ docker compose up -d
 
 One of the RPi clients is also configured to run owntone, and a special shairport-sync configuration to map a single AirPlay target to multiple rooms.
 
+### Create pipes for the containers
+
+```bash
+mkfifo ~/home-assistant-setup/owntone/media/shairport
+mkfifo ~/home-assistant-setup/owntone/media/shairport.metadata
+```
+
+### Run the shairport-sync container for owntone
+
+Check IP settings in the compose file.
+
+```bash
+cd shairport-sync-owntone
+docker compose up -d
+```
+
+### Run the owntone container
+
+```bash
+cd owntone
+docker compose up -d
+```
+
+### Monitoring - Dozzle
+
+One machine as server:
+
+```bash
+cd dozzle
+docker compose up -d
+```
+
+On the rest:
+
+```bash
+cd dozzle-agent
+docker compose up -d
+```
+
+### Reference
+
+Permissions for the pipes on old setup:
+
+```bash
+pi@rpi-hall:~ $ ls -l /srv/music/shairport
+prw-rw-rw- 1 root root 0 Mar 20 22:15 /srv/music/shairport
+pi@rpi-hall:~ $ ls -l /srv/music/shairport.metadata
+prw-rw-rw- 1 root root 0 Mar 20 22:15 /srv/music/shairport.metadata
+pi@rpi-hall:~ $ stat /srv/music/shairport
+  File: /srv/music/shairport
+  Size: 0               Blocks: 0          IO Block: 4096   fifo
+Device: b302h/45826d    Inode: 522331      Links: 1
+Access: (0666/prw-rw-rw-)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2020-12-28 12:39:22.913494036 +0000
+Modify: 2025-03-20 22:15:46.679625605 +0000
+Change: 2025-03-20 22:15:46.679625605 +0000
+ Birth: -
+pi@rpi-hall:~ $ stat /srv/music/shairport.metadata
+  File: /srv/music/shairport.metadata
+  Size: 0               Blocks: 0          IO Block: 4096   fifo
+Device: b302h/45826d    Inode: 522713      Links: 1
+Access: (0666/prw-rw-rw-)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2020-12-28 12:39:44.023175289 +0000
+Modify: 2025-03-20 22:15:46.689625468 +0000
+Change: 2025-03-20 22:15:46.689625468 +0000
+ Birth: -
+pi@rpi-hall:~ $
+```

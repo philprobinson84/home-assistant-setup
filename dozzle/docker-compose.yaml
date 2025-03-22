@@ -1,0 +1,10 @@
+services:
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    environment:
+      - DOZZLE_REMOTE_AGENT=10.0.5.100:7007, 10.0.5.102:7007, 10.0.5.103:7007, 10.0.5.104:7007, 10.0.5.105:7007
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8080:8080
